@@ -5,6 +5,7 @@ This is a Java CLI application, it move photos to proper directories for you and
 ## Getting Started
 
 Java 1.8 is expected to be installed on our system.
+
 To run some utilities you need to install ffmpeg - https://ffmpeg.org/download.html
 
 ## Installing
@@ -27,9 +28,13 @@ java -jar build/libs/PhotosManagement-1.0.jar
 ## Features
 
 move - move images to proper directories
+
 rename - rename directories to "serialNumber# dd.mm.yy" pattern
+
 update - actualization of serial numbers in directories names
+
 video frameTime audioPath ffmpegDir - make video from one image from each folder
+
 
 *All parameters are optional*
 
