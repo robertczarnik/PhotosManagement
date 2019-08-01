@@ -58,6 +58,7 @@ public class Video {
 
     public void onePicFromEachDirVideo() throws IOException {
         //one image from each dir
+        System.out.println("getting images");
         List<Path> images = Files.list(dir)
                 .filter(p -> Files.isDirectory(p))
                 .filter(p -> p.getFileName().toString().contains("#"))
@@ -78,6 +79,7 @@ public class Video {
 
         ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
+        System.out.println("processing images");
         //process all images - using Thread Pool
         for(Path path : images){
             String imageOutStringPath = tempDir.toAbsolutePath()+"\\"+String.format("img-%03d.jpg",nr);
@@ -92,8 +94,13 @@ public class Video {
             Thread.yield();
         }
 
+
+        System.out.println("making video");
         //build ffmpeg command to make a video from images and execute it
         Process proc = Runtime.getRuntime().exec(ffmpegDir + " -y -framerate 1/" + frameTime + " -i " + "\""+ tempDir.toAbsolutePath().toString() + "\\img-%03d.jpg\" -c:v libx264 -r 30 -pix_fmt yuv420p " + "\"" + dir.toAbsolutePath().toString() + "\\tmpVideo.mp4\"");
+
+        proc.getErrorStream().close();
+
 
         try {
             proc.waitFor();
@@ -102,12 +109,13 @@ public class Video {
         }
 
 
+        System.out.println("adding music");
         // add music
         // if mp3 file add only this file to video
         // if directory concatenate all mp3 and add this to video
         // final video duration is min(videoDuration,audioDuration)
         if(Files.isRegularFile(audio) && (audio.toString().endsWith(".mp3"))) { //one file
-            Process lastProc = Runtime.getRuntime().exec(ffmpegDir + " -i tmpVideo.mp4 -i \"" + audio.toString() + "\" -c copy -map 0:v:0 -map 1:a:0 -shortest specialVideo.mp4");
+            Process lastProc = Runtime.getRuntime().exec(ffmpegDir + " -y -i tmpVideo.mp4 -i \"" + audio.toString() + "\" -c copy -map 0:v:0 -map 1:a:0 -shortest specialVideo.mp4");
 
             try {
                 lastProc.waitFor();
@@ -119,7 +127,7 @@ public class Video {
             Path mergedAudioPath = Files.createTempFile(dir.toAbsolutePath(),"audio",".mp3");
 
             if(concatenateAudio(audio,mergedAudioPath)){
-                Process lastProc = Runtime.getRuntime().exec(ffmpegDir + " -i tmpVideo.mp4 -i \"" + mergedAudioPath.toString() + "\" -c copy -map 0:v:0 -map 1:a:0 -shortest specialVideo.mp4");
+                Process lastProc = Runtime.getRuntime().exec(ffmpegDir + " -y -i tmpVideo.mp4 -i \"" + mergedAudioPath.toString() + "\" -c copy -map 0:v:0 -map 1:a:0 -shortest specialVideo.mp4");
 
                 try {
                     lastProc.waitFor();
@@ -130,7 +138,7 @@ public class Video {
 
             Files.delete(mergedAudioPath);
         }
-
+        System.out.println("clean up");
         //remove tmp video
         Files.deleteIfExists(dir.toAbsolutePath().resolve("tmpVideo.mp4"));
     }
