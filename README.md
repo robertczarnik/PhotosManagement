@@ -4,7 +4,7 @@ This is a Java CLI application, it move photos to proper directories for you and
 
 ## Getting Started
 
-Java 1.8 is expected to be installed on our system.
+Java 1.8 is expected to be installed on our system.  
 To run some utilities you need to install ffmpeg - https://ffmpeg.org/download.html
 
 ## Installing
