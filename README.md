@@ -24,7 +24,7 @@ The application can now be run by executing
 java -jar build/libs/PhotosManagement-1.0.jar
 ```
 
-## Features
+## Features & Usage
 
 * move - move images to proper directories
 * rename - rename directories to "serialNumber# dd.mm.yy" pattern
