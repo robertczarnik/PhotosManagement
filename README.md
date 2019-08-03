@@ -30,7 +30,7 @@ In default app operates on a current folder you are now, you can change working 
 * move - move images to proper directories, depending on their original dates
 * rename - rename directories to "serialNumber# dd.mm.yy" pattern
 * update - actualization of serial numbers in directories names, it sorts directories by dates
-* video frameTime audioPath ffmpegDir - make video from one image from each directory *(parameters are optional if are specified in config file)*
+* video frameTime audioPath ffmpegDir - make video from one image from each directory\*(parameters are optional if specified in config file)*
 * config - show configuration
 * changeProp propertyName newValue - set property, propertyName=audioPath|ffmpegPath|frameTime)
 * changeDir dir - change working dir
