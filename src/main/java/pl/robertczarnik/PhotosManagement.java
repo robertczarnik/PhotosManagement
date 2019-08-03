@@ -34,7 +34,7 @@ public final class PhotosManagement {
         //number of existing directories with phothos
         long nr = Files.list(dir)
                 .filter(p -> Files.isDirectory(p))
-                .filter(p -> p.getFileName().toString().matches("\\d+# \\d{2}.\\d{2}.\\d{2}")) //e.g. 11# 21.05.19
+                .filter(p -> p.getFileName().toString().matches("\\d+# \\d{2}.\\d{2}.\\d{2}.*")) //e.g. 11# 21.05.19
                 .filter(p -> !p.getFileName().toString().startsWith("0"))
                 .count();
 
@@ -59,11 +59,13 @@ public final class PhotosManagement {
     public static void updateSerialNumbers(Path dir) throws IOException {
 
         List<Path> directories = Files.list(dir)
-                .filter(p -> p.getFileName().toString().matches("\\d+# \\d{2}.\\d{2}.\\d{2}")) //e.g. 11# 21.05.19
+                .filter(p -> p.getFileName().toString().matches("\\d+# \\d{2}.\\d{2}.\\d{2}.*")) //e.g. 11# 21.05.19
                 .filter(p -> !p.getFileName().toString().startsWith("0"))
                 .sorted((p1,p2) ->{
-                    String s1 = p1.getFileName().toString().substring(p1.getFileName().toString().indexOf(" ")+1);
-                    String s2 = p2.getFileName().toString().substring(p2.getFileName().toString().indexOf(" ")+1);
+                    int spaceIndex1 = p1.getFileName().toString().indexOf(" ")+1;
+                    int spaceIndex2 = p2.getFileName().toString().indexOf(" ")+1;
+                    String s1 = p1.getFileName().toString().substring(spaceIndex1,spaceIndex1+8);
+                    String s2 = p2.getFileName().toString().substring(spaceIndex2,spaceIndex1+8);
                     LocalDate date1 = LocalDate.parse(s1,DateTimeFormatter.ofPattern("dd.MM.yy"));
                     LocalDate date2 = LocalDate.parse(s2,DateTimeFormatter.ofPattern("dd.MM.yy"));
 
@@ -85,7 +87,7 @@ public final class PhotosManagement {
         }
     }
 
-    public static void makeVideo(String[] tab,Path workingDir,String ffmpegDir,String audioDir) throws IOException {
+    public static void makeVideo(String[] tab,Path workingDir,String ffmpegDir,String audioDir,int frameTime) throws IOException {
         if(tab.length==4) {
             Video video = new Video.Builder()
                     .dir(workingDir)
@@ -118,7 +120,7 @@ public final class PhotosManagement {
         }else if(tab.length==1){
             Video video = new Video.Builder()
                     .dir(workingDir)
-                    .frameTime(1)
+                    .frameTime(frameTime)
                     .audio(audioDir)
                     .ffmpegDir(ffmpegDir)
                     .build();
@@ -152,8 +154,7 @@ public final class PhotosManagement {
                 ZonedDateTime zonedDate = date.toInstant().atZone(TimeZone.getDefault().toZoneId()); //convert to ZonedDateTime
 
                 //photos till 5am belongs to previous day
-                if(zonedDate.getHour()<5)
-                    zonedDate.minusDays(1);
+                if(zonedDate.getHour()<5) zonedDate = zonedDate.minusDays(1);
 
                 String dirName = ""+zonedDate.getYear() + String.format("%02d", zonedDate.getMonthValue()) + String.format("%02d",zonedDate.getDayOfMonth());
                 Path dirPath = path.getParent().resolve(dirName);
