@@ -1,6 +1,6 @@
 # PhotosManagement
 
-This is a Java CLI application, it move photos to proper directories for you and do cool stuff on them.
+This is a Java CLI application, it moves photos to proper directories for you and do cool stuff on them.
 
 ## Getting Started
 
