@@ -4,7 +4,7 @@ This is a Java CLI application, it move photos to proper directories for you and
 
 ## Getting Started
 
-Java 1.8 is expected to be installed on our system.\
+Java 1.10 is expected to be installed on our system.\
 To run some utilities you need to install ffmpeg - https://ffmpeg.org/download.html
 
 ## Installing
@@ -12,7 +12,7 @@ To run some utilities you need to install ffmpeg - https://ffmpeg.org/download.h
 After cloning this repository, change into the newly created directory and run
 
 ```
-./gradlew build
+gradlew build
 ```
 
 ## Running the Application
